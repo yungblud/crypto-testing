@@ -1,0 +1,24 @@
+{
+    "name": "crypto-testing",
+    "version": "1.0.0",
+    "main": "./src/index.js",
+    "license": "MIT",
+    "dependencies": {
+        "crypto": "^1.0.1"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.8.4",
+        "@babel/core": "^7.8.4",
+        "@babel/preset-env": "^7.8.4"
+    },
+    "scripts": {
+        "build": "babel src -d dist",
+        "build:watch": "babel src -w -d dist",
+        "start:watch": "nodemon ./dist/index.js"
+    },
+    "babel": {
+        "presets": [
+            "@babel/preset-env"
+        ]
+    }
+}
