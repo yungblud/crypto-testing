@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.encryptHash = exports.encryptHmac = void 0;
+exports.decryptCipherIv = exports.encryptCipherIv = exports.encryptHash = exports.encryptHmac = void 0;
 
 var _crypto = _interopRequireDefault(require("crypto"));
 
@@ -24,3 +24,16 @@ var encryptHash = function encryptHash(pureString) {
 };
 
 exports.encryptHash = encryptHash;
+
+var encryptCipherIv = function encryptCipherIv(pureString) {
+  return _crypto["default"].createCipheriv('aes-256-gcm', secretKey).update(pureString, 'utf8');
+};
+
+exports.encryptCipherIv = encryptCipherIv;
+
+var decryptCipherIv = function decryptCipherIv(pureString) {
+  var encryptedByCipherIv = encryptCipherIv(pureString);
+  return _crypto["default"].createDecipheriv('aes-256-gcm', secretKey).update(encryptedByCipherIv, 'base64');
+};
+
+exports.decryptCipherIv = decryptCipherIv;
