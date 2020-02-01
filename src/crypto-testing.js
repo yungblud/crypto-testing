@@ -1,9 +1,9 @@
 import crypto from 'crypto'
 
-const secretKey = 'abcdefg12345!@#$%'
+const secretKey = 'abcd'
+const iv = '1234'
 
 export const encryptHmac = pureString => {
-    console.log(crypto.createHmac('sha256', secretKey))
     return crypto
         .createHmac('sha256', secretKey)
         .update(pureString)
@@ -11,22 +11,31 @@ export const encryptHmac = pureString => {
 }
 
 export const encryptHash = pureString => {
-    console.log(crypto.createHash('sha256', secretKey))
     return crypto
-        .createHash('sha256', secretKey)
+        .createHash('sha256')
         .update(pureString)
         .digest('hex')
 }
 
 export const encryptCipherIv = pureString => {
-    return crypto
-        .createCipheriv('aes-256-gcm', secretKey)
-        .update(pureString, 'utf8')
+    const cipher = crypto.createCipheriv(
+        'aes-256-gcm',
+        Buffer.alloc(32, secretKey, 'binary'),
+        Buffer.alloc(16, iv, 'binary')
+    )
+    let encrypted = cipher.update(pureString, 'utf8', 'hex')
+    return encrypted
 }
 
 export const decryptCipherIv = pureString => {
-    const encryptedByCipherIv = encryptCipherIv(pureString)
-    return crypto
-        .createDecipheriv('aes-256-gcm', secretKey)
-        .update(encryptedByCipherIv, 'base64')
+    const encrypted = encryptCipherIv(pureString)
+    const decipher = crypto.createDecipheriv(
+        'aes-256-gcm',
+        Buffer.alloc(32, secretKey, 'binary'),
+        Buffer.alloc(16, iv, 'binary')
+    )
+
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8')
+
+    return decrypted
 }
